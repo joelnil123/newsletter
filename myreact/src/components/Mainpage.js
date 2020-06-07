@@ -84,8 +84,8 @@ class Mainpage extends Component {
       }
 
       changeNewsLetter = (newsletter) => {
-        var data = { "newsletterTrue": newsletter }
-        axios.post("http://localhost:3000/users",this.state, this.state.newsletter = true)
+        
+        axios.post("http://localhost:3000/users",this.state, this.state.newsletter = true, this.state.loggedin = false)
         .then(response => {
           console.log(response)
         })
