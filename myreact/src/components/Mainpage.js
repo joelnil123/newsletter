@@ -38,7 +38,7 @@ class Mainpage extends Component {
 
     e.preventDefault();
 
-    axios.post("http://localhost:3000/users", this.state)
+    axios.post("http://localhost:3001/users", this.state)
       .then(response => {
         console.log(response)
       })
@@ -51,31 +51,28 @@ class Mainpage extends Component {
   }
 
   login = e => {
-     
-    
-    axios.post("http://localhost:3000/users", this.state, this.state.loggedin = true)
+    axios.post("http://localhost:3001/users/login", this.state)
     
     .then(response => {
       console.log(response)
+      console.log(typeof(response.data.newsletter));
       if (response.data === "invalid")
       {
         console.log("fel ");
       } else
       {
         var loggedInUser = {
-          id: response.data.id,
-            username: response.data.userName,
+            username: response.data.loginUserName,
             newsletter: response.data.newsletter,
           };
           this.setState({
-      
-            newsletter: response.data.newsletter,
-            id: response.data.id,
-          
+            ...this.state,
+            loggedin: response.data.loggedin
           });
           localStorage.setItem(
             "currentLoggedInUser",
             JSON.stringify(loggedInUser)
+            
             );
           }
         })
@@ -85,7 +82,7 @@ class Mainpage extends Component {
 
       changeNewsLetter = (newsletter) => {
         
-        axios.post("http://localhost:3000/users",this.state, this.state.newsletter = true, this.state.loggedin = false)
+        axios.post("http://localhost:3001/users",this.state, this.state.newsletter = true)
         .then(response => {
           console.log(response)
         })

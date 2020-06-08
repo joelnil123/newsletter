@@ -37,37 +37,52 @@ router.post('/', function (req, res) {
 
 
 //logga in function
-router.post('/', function(req, res) {
+router.post('/login', function(req, res) {
+  console.log("harebrhej");
   var loginSuccess = false;
-  var user = req.body.user.loginUserName;
-  var pass = req.body.user.loginUserPassword;
-
-  fs.readFile('./users.json', (err,data) => {
-    if(err) throw err;
+  var newUsername = req.body.loginUserName;
+  var newPassword = req.body.loginUserPassword;
+  
+  fs.readFile('users.json', (err,data) => {
+    
     var users = JSON.parse(data);
-    users.forEach((userInFile) => {
-      if(user === userInFile.userName && pass === userInFile.userPassword) {
-        console.log("asd");
-          loginSuccess = true;
-          if (loginSuccess === true) {
-            userLoggedIn = {
-              loggedin: true,
-              username: userInFile.userName,
-              email: userInFile.userEmail,
-              newsletter: userInFile.newsletter,
-              
-            };
-            console.log("User logged in successfully!");
-      }
-      else
-      console.log("We couldn't find that user...");
-      
-   
-        
-        
-        res.send(userLoggedIn);
-      }
-    })
+    if(err) throw err;
+
+    const [ foundUser ] = users.filter(user => {
+      return user.userName === newUsername && user.userPassword === newPassword;
+    });
+    
+    if (foundUser) {
+      res.send({
+        ...foundUser,
+        loggedin: true,
+      });
+    } else {
+      res.status(400).send({
+        loggedin: false,
+        userName: null,
+        userEmail: null,
+      });
+    }
+    // users.forEach((userInFile) => {
+    //   if(newUsername === userInFile.userName && newPassword === userInFile.userPassword) {
+    //       loginSuccess = true;
+    //       console.log("bra");
+    //   }
+    //       if (loginSuccess === true) {
+    //         userLoggedIn = {
+    //           loggedin: true,
+    //           userName: userInFile.userName,
+    //           userEmail: userInFile.userEmail,
+    //         };
+    //         console.log("yay");
+    //         res.send(userLoggedIn);
+    //         return
+    //       }
+    //       else {
+    //         console.log("We couldn't find that user...");
+    //       }
+        // })
   })
 });
 
